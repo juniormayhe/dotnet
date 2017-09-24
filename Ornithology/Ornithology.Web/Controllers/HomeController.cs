@@ -12,14 +12,7 @@ namespace Ornithology.Web.Controllers
         {
             return View();
         }
-
-        public ActionResult Acerca()
-        {
-            ViewBag.Message = "Acerca esta aplicación.";
-
-            return View();
-        }
-
+        
         public ActionResult Contacto()
         {
             ViewBag.Message = "Deje su mensaje!";
