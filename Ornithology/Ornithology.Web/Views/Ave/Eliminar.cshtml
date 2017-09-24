@@ -13,6 +13,10 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
+            @Html.DisplayNameFor(model => model.Codigo)
+        </dt>
+
+        <dt>
             @Html.DisplayNameFor(model => model.NombreComun)
         </dt>
 
@@ -40,7 +44,7 @@
 
     @using (Html.BeginForm("EliminarConfirmado", "Ave", new { codigo = Model.Codigo}, FormMethod.Post)) {
         @Html.AntiForgeryToken()
-        @*@Html.HiddenFor(model => model.Codigo)*@
+        
 
         <div class="form-actions no-color">
             <input type="submit" value="Confirmar" class="btn btn-warning" />

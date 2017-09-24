@@ -60,7 +60,8 @@ namespace Ornithology.Web.Controllers
                 
                 aves = await _aveServices
                     .ListarAsyncFilteredAsNoTracking(
-                    x=> x.NombreCientifico == ave.NombreComunOCientifico ||
+                    x=> x.NombreComun.Contains(ave.NombreComunOCientifico) ||
+                    x.NombreCientifico.Contains(ave.NombreComunOCientifico) ||
                     x.AvesPais.Any(avepais=>avepais.Pais.Zona.NombreZona == ave.NombreZona), "AvesPais.Pais.Zona");
                 
             }
@@ -107,7 +108,10 @@ namespace Ornithology.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var ave = new Ave { Codigo = aveVM.Codigo, NombreComun = aveVM.NombreComun, NombreCientifico = aveVM.NombreCientifico };
+                var ave = new Ave { Codigo = aveVM.Codigo.ToUpperInvariant(),
+                    NombreComun = aveVM.NombreComun.ToUpperInvariant(),
+                    NombreCientifico = aveVM.NombreCientifico.ToUpperInvariant()
+                };
                 List<AvePais> avePaises = new List<AvePais>();
                 foreach (string codigoPais in aveVM.PaisesSeleccionados) {
                     avePaises.Add(new AvePais {
@@ -168,8 +172,8 @@ namespace Ornithology.Web.Controllers
             if (ModelState.IsValid)
             {
                 Ave ave = await _aveServices.FindAsync(aveVM.Codigo);
-                ave.NombreCientifico = aveVM.NombreCientifico;
-                ave.NombreComun = aveVM.NombreComun;
+                ave.NombreCientifico = aveVM.NombreCientifico.ToUpperInvariant();
+                ave.NombreComun = aveVM.NombreComun.ToUpperInvariant();
                 
                 foreach (string codigoPais in aveVM.PaisesSeleccionados)
                 {

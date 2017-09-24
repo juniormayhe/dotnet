@@ -8,7 +8,7 @@
         <div class="form-group">
             @{ Html.EnableClientValidation(false); }
             <div class="col-md-3 help-block">
-                Nombre:  @Html.EditorFor(m => m.NombreComunOCientifico, new { htmlAttributes = new { @class = "form-control" } })
+                Nombre:  @Html.EditorFor(m => m.NombreComunOCientifico, new { htmlAttributes = new { @class = "form-control text-uppercase" } })
             </div>
             <div class="col-md-3 help-block">
                 Zona:  @Html.DropDownListFor(m => m.NombreZona, new SelectList(Model.ZonasDisponibles, "NombreZona", "NombreZona"), "--Mostrar todas las zonas--", new { @class = "form-control" })
