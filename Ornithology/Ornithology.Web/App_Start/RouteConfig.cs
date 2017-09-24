@@ -15,9 +15,10 @@ namespace Ornithology.Web
 
             routes.MapRoute(
                 name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                url: "{controller}/{action}/{codigo}",
+                defaults: new { controller = "Home", action = "Index", codigo = UrlParameter.Optional }
             );
+            
         }
     }
 }

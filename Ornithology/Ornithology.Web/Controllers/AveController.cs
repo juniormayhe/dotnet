@@ -33,12 +33,6 @@ namespace Ornithology.Web.Controllers
 
 
         }
-        [HttpPost]
-        public ActionResult Listar(int? page = 1)
-        {
-            AveVM ave = new AveVM();
-            return View(ave);
-        }
         
         // GET: Ave
         public async Task<ActionResult> Listar(AveVM ave, int? page = 1)
@@ -86,21 +80,6 @@ namespace Ornithology.Web.Controllers
             }
             return View(ave);
         }
-
-        // GET: Ave/Details/5
-        //public async Task<ActionResult> Detalles(string id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    AveVM aveVM = await db.AveVMs.FindAsync(id);
-        //    if (aveVM == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(aveVM);
-        //}
 
         // GET: Ave/Create
         public async Task<ActionResult> Crear()
@@ -151,36 +130,78 @@ namespace Ornithology.Web.Controllers
             return View(aveVM);
         }
 
-        // GET: Ave/Edit/5
-        //public async Task<ActionResult> Editar(string id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    AveVM aveVM = await db.AveVMs.FindAsync(id);
-        //    if (aveVM == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(aveVM);
-        //}
+        //GET: Ave/Edit/5
+        public async Task<ActionResult> Editar(string codigo)
+        {
+            if (codigo == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            paisesDisponibles = await _paisServices.ListarAsyncAsNoTracking();
+
+            Ave ave = await _aveServices.FindAsync(codigo);
+            AveVM aveVM = new AveVM {
+                Codigo = codigo,
+                NombreComun = ave.NombreComun,
+                NombreCientifico = ave.NombreCientifico,
+                PaisesSeleccionados = ave.AvesPais.Select(x=>x.CodigoPais).ToArray(),
+                PaisesDisponibles = paisesDisponibles,
+                Paises = ave.AvesPais.Select(y => y.Pais).ToList()
+            };
+            if (aveVM == null)
+            {
+                return HttpNotFound();
+            }
+            return View(aveVM);
+        }
 
         // POST: Ave/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<ActionResult> Editar([Bind(Include = "Codigo,NombreComun,NombreCientifico")] AveVM aveVM)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.Entry(aveVM).State = EntityState.Modified;
-        //        await db.SaveChangesAsync();
-        //        return RedirectToAction("Index");
-        //    }
-        //    return View(aveVM);
-        //}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Editar([Bind(Include = "Codigo,NombreComun,NombreCientifico,Paises,PaisesSeleccionados")] AveVM aveVM)
+        {
+            aveVM.PaisesDisponibles = paisesDisponibles;
+            
+            if (ModelState.IsValid)
+            {
+                Ave ave = await _aveServices.FindAsync(aveVM.Codigo);
+                ave.NombreCientifico = aveVM.NombreCientifico;
+                ave.NombreComun = aveVM.NombreComun;
+                
+                foreach (string codigoPais in aveVM.PaisesSeleccionados)
+                {
+                    if (ave.AvesPais.Any(x => x.CodigoPais == codigoPais))
+                    {
+                        continue;
+                    }
+                    else {
+                        ave.AvesPais.Add(new AvePais
+                        {
+                            CodigoPais = codigoPais,
+                            CodigoAve = aveVM.Codigo
+                        });
+                    }
+                    
+                }
+                //remover paises no seleccionados
+                ave.AvesPais = ave.AvesPais.Where(x=> aveVM.PaisesSeleccionados.Contains(x.CodigoPais)).ToList();
+
+
+                RespuestaApi respuesta = await _aveServices.ModificarAve(ave);
+                bool exito = respuesta.Mensajes.Count == 0;
+                if (exito)
+                {
+                    return RedirectToAction("Listar");
+                }
+                else {
+                    ViewBag.Mensajes = respuesta.Mensajes;
+                }
+            }
+            return View(aveVM);
+        }
 
         // GET: Ave/Delete/5
         //public async Task<ActionResult> Eliminar(string id)

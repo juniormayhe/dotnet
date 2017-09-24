@@ -14,5 +14,6 @@ namespace Ornithology.Services
         Task<RespuestaApi> ModificarAve(Ave ave);
 
         Task<RespuestaApi> EliminarAve(string codigoAve);
+        
     }
 }

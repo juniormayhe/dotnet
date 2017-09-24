@@ -33,7 +33,7 @@ namespace Ornithology.Web.Models
         [Required(ErrorMessage = "Por favor seleccione un País para el ave")]
         public string[] PaisesSeleccionados { set; get; }
 
-        
+        [Display(Name = "Países")]
         public List<Pais> PaisesDisponibles { get; internal set; }
         public List<Zona> ZonasDisponibles { get; internal set; }
 
@@ -44,13 +44,13 @@ namespace Ornithology.Web.Models
 
         public string PaisesComoTexto => string.Join(",", Paises.Select(x=>x.NombrePais));
 
-        [Display(Name = "Nombre común o científico")]
-        [MinLength(5, ErrorMessage = "El Nombre común debe contener en lo mínimo 5 caracteres"), MaxLength(100, ErrorMessage = "El Nombre común debe contener en lo máximo 100 caracteres")]
+        //[Display(Name = "Nombre común o científico")]
+        //[MinLength(5, ErrorMessage = "El Nombre común debe contener en lo mínimo 5 caracteres"), MaxLength(100, ErrorMessage = "El Nombre común debe contener en lo máximo 100 caracteres")]
         public string NombreComunOCientifico { get; set; }
 
 
-        [Display(Name = "Zona científico")]
-        [MinLength(5, ErrorMessage = "La Zona debe contener en lo mínimo 5 caracteres"), MaxLength(45, ErrorMessage = "La Zona debe contener en lo máximo 45 caracteres")]
+        //[Display(Name = "Zona científico")]
+        //[MinLength(5, ErrorMessage = "La Zona debe contener en lo mínimo 5 caracteres"), MaxLength(45, ErrorMessage = "La Zona debe contener en lo máximo 45 caracteres")]
         public string NombreZona { get; set; }
         
     }

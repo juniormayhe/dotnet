@@ -227,7 +227,6 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Ave\Crear.cshtml" />
     <Content Include="Views\Ave\Eliminar.cshtml" />
-    <Content Include="Views\Ave\Detalles.cshtml" />
     <Content Include="Views\Ave\Editar.cshtml" />
     <Content Include="Views\Ave\Listar.cshtml" />
     <Content Include="Views\Ave\_AvesPartialView.cshtml" />

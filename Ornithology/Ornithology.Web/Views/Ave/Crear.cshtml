@@ -12,6 +12,7 @@
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
+        
         @if (ViewBag.Mensajes != null)
         {
             <div class="alert alert-danger">
@@ -25,7 +26,7 @@
             </div>
         }
         <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
         <div class="form-group">
             @Html.LabelFor(model => model.Codigo, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">

@@ -21,6 +21,11 @@ namespace Ornithology.Services
             
         }
 
+        public async Task<Pais> FindAsync(string codigo)
+        {
+            return await _paisRepository.GetFirstAsync(x => x.Codigo == codigo);
+        }
+
         public async Task<List<Pais>> ListarAsync()
         {
             return await _paisRepository.GetAllAsync();
@@ -35,5 +40,6 @@ namespace Ornithology.Services
         {
             return await _paisRepository.GetFilteredAsyncAsNoTracking();
         }
+        
     }
 }

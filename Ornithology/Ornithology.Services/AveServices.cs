@@ -21,6 +21,11 @@ namespace Ornithology.Services
             _aveDomain = aveDomain;
         }
 
+        public async Task<Ave> FindAsync(string codigoAve)
+        {
+            return await _aveRepository.GetFirstAsync(x=>x.Codigo == codigoAve);
+        }
+
         public async Task<List<Ave>> ListarAsync()
         {
             return await _aveRepository.GetAllAsync();
@@ -94,13 +99,20 @@ namespace Ornithology.Services
         {
             var respuesta = new RespuestaApi();
 
-            List<string> mensajes = null;
-            
+            var mensajes = new List<string>();
+
             bool aveValida = _aveDomain.Validar(ave, ref mensajes);
 
-            if (aveValida)
+            if (aveValida && mensajes.Count == 0)
             {
+                //foreach (AvePais avepais in ave.AvesPais)
+                //{
+                //    ave.AvesPais.Add(avepais);
+                //}
+                
                 _aveRepository.Modify(ave);
+
+                
                 int resultado = await _aveRepository.UnitOfWork.CommitAsync();
             }
             else
@@ -108,6 +120,7 @@ namespace Ornithology.Services
                 respuesta = new RespuestaApi { Mensajes = mensajes };
             }
 
+            respuesta.Mensajes = mensajes;
             return respuesta;
         }
 

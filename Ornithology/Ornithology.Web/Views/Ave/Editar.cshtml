@@ -1,23 +1,33 @@
 ﻿@model Ornithology.Web.Models.AveVM
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Editar";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Edit</h2>
-
+<h2>@ViewBag.Title</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>AveVM</h4>
+        
+        @Html.HiddenFor(model => model.Codigo)
+        @if (ViewBag.Mensajes != null)
+        {
+            <div class="alert alert-danger">
+                <strong>Por favor:</strong><br /><br />
+                <ul>
+                    @foreach (string item in ViewBag.Mensajes)
+                    {
+                        <li>@item</li>
+                    }
+                </ul>
+            </div>
+        }
         <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.CodigoAve)
-
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
         <div class="form-group">
             @Html.LabelFor(model => model.NombreComun, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -33,6 +43,16 @@
                 @Html.ValidationMessageFor(model => model.NombreCientifico, "", new { @class = "text-danger" })
             </div>
         </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PaisesDisponibles, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.ListBoxFor(m => m.PaisesSeleccionados, new SelectList(Model.PaisesDisponibles, "Codigo", "NombrePais"),
+                    new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.PaisesSeleccionados, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">

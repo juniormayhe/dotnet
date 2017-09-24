@@ -30,9 +30,8 @@
                     @Html.DisplayFor(modelItem => item.PaisesComoTexto)
                 </td>
                 <td>
-                    @Html.ActionLink("Editar", "Editar", new { id = item.Codigo }) |
-                    @Html.ActionLink("Detalles", "Detalles", new { id = item.Codigo }) |
-                    @Html.ActionLink("Eliminar", "Eliminar", new { id = item.Codigo })
+                    @Html.ActionLink("Editar", "Editar", new { codigo = item.Codigo }) |
+                    @Html.ActionLink("Eliminar", "Eliminar", new { codigo = item.Codigo })
                 </td>
             </tr>
         }
