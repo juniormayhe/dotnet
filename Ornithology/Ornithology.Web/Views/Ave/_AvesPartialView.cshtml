@@ -1,0 +1,56 @@
+﻿@model Ornithology.Web.Models.AveVM
+@using X.PagedList
+@using X.PagedList.Mvc
+
+<table class="table table-hover table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NombreComun)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NombreCientifico)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Paises)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Lista)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NombreComun)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NombreCientifico)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaisesComoTexto)
+                </td>
+                <td>
+                    @Html.ActionLink("Editar", "Editar", new { id = item.Codigo }) |
+                    @Html.ActionLink("Detalles", "Detalles", new { id = item.Codigo }) |
+                    @Html.ActionLink("Eliminar", "Eliminar", new { id = item.Codigo })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- paginador ajax -->
+@Html.PagedListPager(Model.Lista, page => Url.Action("Listar", new { page = page }),
+        PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new PagedListRenderOptions(),
+            new AjaxOptions()
+            {
+                HttpMethod = "GET",
+                UpdateTargetId = "listaAves",
+                InsertionMode = InsertionMode.Replace
+            }
+        )
+)
+
+<!--renderiza os javascripts minimizados -->
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryval")

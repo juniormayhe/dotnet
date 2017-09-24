@@ -1,0 +1,48 @@
+﻿@model Ornithology.Web.Models.AveVM
+
+
+@using X.PagedList
+@using X.PagedList.Mvc
+
+@{
+    ViewBag.Title = "Aves";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+<h3>@ViewBag.Message</h3>
+
+@Html.Partial("_AvesFiltroPartialView", Model)
+
+<p>Lista de aves registradas.</p>
+@if (Model.Lista.Count == 0)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <em>Aviso: Ninguna ave fue encontrada.</em>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="table-responsive table-full-width">
+
+                    <span id="listaAves">
+                        @Html.Partial("_AvesPartialView", Model)
+                    </span>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+<br/>
+<div class="row">
+    <div class="col-md-12 help-block">
+        @Html.ActionLink("Crear ave", "Crear", "Ave", new { }, new { @class = "btn btn-primary" })
+    </div>
+</div>

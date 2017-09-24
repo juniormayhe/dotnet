@@ -1,0 +1,22 @@
+﻿@model Ornithology.Web.Models.AveVM
+
+@using (Html.BeginForm(new { action = "Listar", controller="Ave", page=1 } ))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <div class="form-group">
+            <div class="col-md-3 help-block">
+                Nombre:  @Html.EditorFor(m => m.NombreComunOCientifico)
+            </div>
+            <div class="col-md-3 help-block">
+                Zona:  @Html.EditorFor(m => m.NombreZona)
+            </div>
+            <div class="col-md-5">
+                
+                <input type="submit" value="Filtrar" class="btn btn-default">
+            </div>
+            
+        </div>
+    </div>
+}

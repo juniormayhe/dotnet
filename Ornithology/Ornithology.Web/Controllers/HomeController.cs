@@ -1,0 +1,30 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace Ornithology.Web.Controllers
+{
+    public class HomeController : Controller
+    {
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        public ActionResult Acerca()
+        {
+            ViewBag.Message = "Acerca esta aplicación.";
+
+            return View();
+        }
+
+        public ActionResult Contacto()
+        {
+            ViewBag.Message = "Deje su mensaje!";
+
+            return View();
+        }
+    }
+}
