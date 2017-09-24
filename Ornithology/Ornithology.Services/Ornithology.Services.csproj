@@ -40,7 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IServiceAsNoTracking.cs" />
+    <Compile Include="IZonaServices.cs" />
     <Compile Include="PaisServices.cs" />
+    <Compile Include="ZonaServices.cs" />
     <Compile Include="AveServices.cs" />
     <Compile Include="IPaisServices.cs" />
     <Compile Include="IAveServices.cs" />

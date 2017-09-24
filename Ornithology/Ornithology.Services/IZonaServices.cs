@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Ornithology.Services
 {
-    public interface IPaisServices : IService<Pais>, IServiceAsNoTracking<Pais> {
+    public interface IZonaServices : IServiceAsNoTracking<Zona> {
 
         
     }

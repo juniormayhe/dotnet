@@ -16,23 +16,38 @@ namespace Ornithology.Web.Controllers
 {
     public class AveController : Controller
     {
-        
+
         private IAveServices _aveServices = null;
         private IPaisServices _paisServices = null;
+        private IZonaServices _zonaServices = null;
         private int pageSize = 5;
         private static List<Pais> paisesDisponibles = new List<Pais>();
+        private static List<Zona> zonasDisponibles = new List<Zona>();
 
-        public AveController(IAveServices aveServices, IPaisServices paisServices)
+
+        public AveController(IAveServices aveServices, IPaisServices paisServices, IZonaServices zonaServices)
         {
             _aveServices = aveServices;
             _paisServices = paisServices;
-        }
+            _zonaServices = zonaServices;
 
+
+        }
+        [HttpPost]
+        public ActionResult Listar(int? page = 1)
+        {
+            AveVM ave = new AveVM();
+            return View(ave);
+        }
+        
         // GET: Ave
         public async Task<ActionResult> Listar(AveVM ave, int? page = 1)
         {
+            zonasDisponibles = await _zonaServices.ListarAsyncAsNoTracking();
+            ave.ZonasDisponibles = zonasDisponibles;
             ave.NombreComunOCientifico = ave.NombreComunOCientifico ?? "";
             ave.NombreZona = ave.NombreZona ?? "";
+            
             bool hayNombre = !string.IsNullOrEmpty(ave.NombreComunOCientifico);
             bool hayZona = !string.IsNullOrEmpty(ave.NombreZona);
             bool hayFiltros = hayNombre || hayZona;
@@ -48,9 +63,7 @@ namespace Ornithology.Web.Controllers
             else {
                 ave.NombreComunOCientifico = ave.NombreComunOCientifico.ToUpperInvariant().Trim();
                 ave.NombreZona= ave.NombreZona.ToUpperInvariant().Trim();
-                //aves = await _aveServices
-                //    .ListarAsyncFilteredAsNoTracking(x=> x.NombreCientifico.Contains(ave.NombreComunOCientifico)
-                //        || x.NombreCientifico.Contains(ave.NombreComunOCientifico), "AvesPais.Pais.Zona");
+                
                 aves = await _aveServices
                     .ListarAsyncFilteredAsNoTracking(
                     x=> x.NombreCientifico == ave.NombreComunOCientifico ||
@@ -65,14 +78,13 @@ namespace Ornithology.Web.Controllers
                 Paises = x.AvesPais.Select(y => y.Pais).ToList()
             });
 
-            IPagedList<AveVM> pagina = lista.ToPagedList(page ?? 1, pageSize);
-            AveVM vm = new AveVM();
-            vm.Codigo = "1";
-            vm.Lista = pagina;
+            IPagedList<AveVM> paginaConAves = lista.ToPagedList(page ?? 1, pageSize);
+            ave.Lista = paginaConAves;
+
             if (Request.IsAjaxRequest()) {
-                return PartialView("_AvesPartialView", vm);
+                return PartialView("_AvesPartialView", ave);
             }
-            return View(vm);
+            return View(ave);
         }
 
         // GET: Ave/Details/5
@@ -93,11 +105,14 @@ namespace Ornithology.Web.Controllers
         // GET: Ave/Create
         public async Task<ActionResult> Crear()
         {
-            var paises = await _paisServices.ListarAsync();
-            paisesDisponibles = paises;
+            
+            paisesDisponibles = await _paisServices.ListarAsyncAsNoTracking();
+            
 
             var aveVM = new AveVM();
             aveVM.PaisesDisponibles = paisesDisponibles;
+            aveVM.ZonasDisponibles = zonasDisponibles;
+
             return View(aveVM);
         }
 
@@ -109,6 +124,7 @@ namespace Ornithology.Web.Controllers
         public async Task<ActionResult> Crear([Bind(Include = "Codigo,NombreComun,NombreCientifico,PaisesSeleccionados")] AveVM aveVM)
         {
             aveVM.PaisesDisponibles = paisesDisponibles;
+            aveVM.ZonasDisponibles = zonasDisponibles;
 
             if (ModelState.IsValid)
             {

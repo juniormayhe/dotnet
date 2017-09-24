@@ -48,11 +48,17 @@ namespace Ornithology.Web.App_Start
                 kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
                 kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
                 kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
+
+                kernel.Bind<IZonaRepository>().To<ZonaRepository>();
+                kernel.Bind<IZonaServices>().To<ZonaServices>();
+
                 kernel.Bind<IPaisRepository>().To<PaisRepository>();
                 kernel.Bind<IPaisServices>().To<PaisServices>();
+
                 kernel.Bind<IAveRepository>().To<AveRepository>();
                 kernel.Bind<IAveServices>().To<AveServices>();
                 kernel.Bind<IAveDomain>().To<AveDomain>();
+
                 RegisterServices(kernel);
                 return kernel;
             }

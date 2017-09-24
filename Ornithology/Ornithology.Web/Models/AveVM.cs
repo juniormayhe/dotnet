@@ -34,7 +34,9 @@ namespace Ornithology.Web.Models
         public string[] PaisesSeleccionados { set; get; }
 
         
-        public List<Pais> PaisesDisponibles { get; set; }
+        public List<Pais> PaisesDisponibles { get; internal set; }
+        public List<Zona> ZonasDisponibles { get; internal set; }
+
         //lista de aves
         public IPagedList<AveVM> Lista { get; set; }
 
@@ -50,6 +52,6 @@ namespace Ornithology.Web.Models
         [Display(Name = "Zona científico")]
         [MinLength(5, ErrorMessage = "La Zona debe contener en lo mínimo 5 caracteres"), MaxLength(45, ErrorMessage = "La Zona debe contener en lo máximo 45 caracteres")]
         public string NombreZona { get; set; }
-
+        
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Ornithology.Services
 {
-    public interface IAveServices : IService<Ave> {
+    public interface IAveServices : IService<Ave>, IServiceAsNoTracking<Ave> {
 
         Task<RespuestaApi> CrearAve(Ave ave);
 
