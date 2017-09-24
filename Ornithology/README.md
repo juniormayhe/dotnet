@@ -2,6 +2,10 @@
 
 EntityFramework.SqlServerCompact 6.1.3
 
+#Instancia de Database
+
+(LocalDB)\MSSQLLocalDB
+
 # Comandos utiles
 
 ## Reinstalación de Paquetes

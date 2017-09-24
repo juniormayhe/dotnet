@@ -33,8 +33,9 @@ namespace Ornithology.Web.Controllers
 
 
         }
-        
+
         // GET: Ave
+        [ValidateInput(false)]
         public async Task<ActionResult> Listar(AveVM ave, int? page = 1)
         {
             zonasDisponibles = await _zonaServices.ListarAsyncAsNoTracking();
@@ -54,16 +55,12 @@ namespace Ornithology.Web.Controllers
                 aves = await _aveServices.ListarAsyncAsNoTracking();
                 
             }
-            else {
+            else
+            {
                 ave.NombreComunOCientifico = ave.NombreComunOCientifico.ToUpperInvariant().Trim();
-                ave.NombreZona= ave.NombreZona.ToUpperInvariant().Trim();
-                
-                aves = await _aveServices
-                    .ListarAsyncFilteredAsNoTracking(
-                    x=> x.NombreComun.Contains(ave.NombreComunOCientifico) ||
-                    x.NombreCientifico.Contains(ave.NombreComunOCientifico) ||
-                    x.AvesPais.Any(avepais=>avepais.Pais.Zona.NombreZona == ave.NombreZona), "AvesPais.Pais.Zona");
-                
+                ave.NombreZona = ave.NombreZona.ToUpperInvariant().Trim();
+                aves = await FiltrarResultados(ave, hayNombre, hayZona, aves);
+
             }
             lista = aves.Select(x => new AveVM
             {
@@ -80,6 +77,32 @@ namespace Ornithology.Web.Controllers
                 return PartialView("_AvesPartialView", ave);
             }
             return View(ave);
+        }
+
+        private async Task<List<Ave>> FiltrarResultados(AveVM ave, bool hayNombre, bool hayZona, List<Ave> aves)
+        {
+            if (hayNombre && hayZona)
+            {
+                aves = await _aveServices
+                    .ListarAsyncFilteredAsNoTracking(
+                    x => (x.NombreComun.Contains(ave.NombreComunOCientifico) ||
+                    x.NombreCientifico.Contains(ave.NombreComunOCientifico)) &&
+                    x.AvesPais.Any(avepais => avepais.Pais.Zona.NombreZona == ave.NombreZona), "AvesPais.Pais.Zona");
+            }
+            else if (hayNombre)
+            {
+                aves = await _aveServices
+                    .ListarAsyncFilteredAsNoTracking(
+                    x => x.NombreComun.Contains(ave.NombreComunOCientifico) ||
+                    x.NombreCientifico.Contains(ave.NombreComunOCientifico));
+            }
+            else if (hayZona)
+            {
+                aves = await _aveServices
+                    .ListarAsyncFilteredAsNoTracking(x => x.AvesPais.Any(avepais => avepais.Pais.Zona.NombreZona == ave.NombreZona), "AvesPais.Pais.Zona");
+            }
+
+            return aves;
         }
 
         // GET: Ave/Create

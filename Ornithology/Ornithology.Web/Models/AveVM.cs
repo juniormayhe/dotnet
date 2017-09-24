@@ -42,7 +42,10 @@ namespace Ornithology.Web.Models
 
         public List<Pais> Paises { get; set; }
 
-        public string PaisesComoTexto => string.Join(",", Paises.Select(x=>x.NombrePais));
+        
+        public string PaisesComoTexto => Paises.Count() ==0 ? "Sin país definido" : string.Join(",", 
+            Paises.Select(x => x.NombrePais + " " + (x.Zona == null ? "(Sin zona)" : "(Zona " + x.Zona?.NombreZona + ")")));
+        
 
         //[Display(Name = "Nombre común o científico")]
         //[MinLength(5, ErrorMessage = "El Nombre común debe contener en lo mínimo 5 caracteres"), MaxLength(100, ErrorMessage = "El Nombre común debe contener en lo máximo 100 caracteres")]
