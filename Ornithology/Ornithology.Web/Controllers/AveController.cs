@@ -203,31 +203,55 @@ namespace Ornithology.Web.Controllers
             return View(aveVM);
         }
 
-        // GET: Ave/Delete/5
-        //public async Task<ActionResult> Eliminar(string id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    AveVM aveVM = await db.AveVMs.FindAsync(id);
-        //    if (aveVM == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(aveVM);
-        //}
+        //GET: Ave/Delete/5
+        public async Task<ActionResult> Eliminar(string codigo)
+        {
+            if (codigo == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
 
-        // POST: Ave/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<ActionResult> EliminarConfirmado(string id)
-        //{
-        //    AveVM aveVM = await db.AveVMs.FindAsync(id);
-        //    db.AveVMs.Remove(aveVM);
-        //    await db.SaveChangesAsync();
-        //    return RedirectToAction("Index");
-        //}
+            paisesDisponibles = await _paisServices.ListarAsyncAsNoTracking();
+
+            Ave ave = await _aveServices.FindAsync(codigo);
+            AveVM aveVM = new AveVM
+            {
+                Codigo = codigo,
+                NombreComun = ave.NombreComun,
+                NombreCientifico = ave.NombreCientifico,
+                PaisesSeleccionados = ave.AvesPais.Select(x => x.CodigoPais).ToArray(),
+                PaisesDisponibles = paisesDisponibles,
+                Paises = ave.AvesPais.Select(y => y.Pais).ToList()
+            };
+            if (aveVM == null)
+            {
+                return HttpNotFound();
+            }
+            return View(aveVM);
+        }
+
+        //POST: Ave/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EliminarConfirmado(string codigo)
+        {
+            
+            if (ModelState.IsValid)
+            {
+                //remover paises
+                RespuestaApi respuesta = await _aveServices.EliminarAve(codigo);
+                bool exito = respuesta.Mensajes.Count == 0;
+                if (exito)
+                {
+                    return RedirectToAction("Listar");
+                }
+                else
+                {
+                    ViewBag.Mensajes = respuesta.Mensajes;
+                }
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+        }
 
         //protected override void Dispose(bool disposing)
         //{

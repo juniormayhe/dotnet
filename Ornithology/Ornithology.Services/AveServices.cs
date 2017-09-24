@@ -128,10 +128,10 @@ namespace Ornithology.Services
         {
             var respuesta = new RespuestaApi();
 
-            List<string> mensajes = null;
-            Ave ave = _aveRepository
-                .GetFilteredElementsAsNoTracking(item => item.Codigo == codigoAve)
-                .First();
+            var mensajes = new List<string>();
+
+            Ave ave = await _aveRepository
+                .GetFirstAsync(item => item.Codigo == codigoAve);
 
             bool aveValida = ave != null;
 
@@ -145,6 +145,8 @@ namespace Ornithology.Services
                 respuesta = new RespuestaApi { Mensajes = mensajes };
             }
 
+            respuesta.Mensajes = mensajes;
+            
             return respuesta;
         }
 
