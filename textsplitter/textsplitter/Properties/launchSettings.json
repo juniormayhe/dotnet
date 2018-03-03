@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "textsplitter": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\Users\\Junior\\Desktop\\emails.txt\"",
+      "workingDirectory": "C:\\Users\\Junior\\Desktop\\"
+    }
+  }
+}
